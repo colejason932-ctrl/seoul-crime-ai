@@ -294,12 +294,22 @@ elif st.session_state.selected_menu == "report":
         
         # 현재 자치구의 최댓값을 계산하여 그래프 크기를 꽉 차게 자동 조절
         max_val = max(vals)
+        max_val = max(vals)
+        
+        # 0부터 최대값까지의 척도를 HTML 스타일이 들어간 텍스트로 직접 변환
+        tick_vals = np.linspace(0, max_val * 1.2, 5) # 5단계로 눈금 나누기
+        # 검정 글씨에 흰색 그림자(테두리 느낌) 적용
+        tick_texts = [f"<span style='color:black; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;'>{int(v)}</span>" for v in tick_vals]
+
         fig_radar.update_layout(
             polar=dict(
                 radialaxis=dict(
                     visible=True, 
                     range=[0, max_val * 1.2 if max_val > 0 else 10],
-                    tickfont=dict(color='yellow')
+                    tickmode='array',
+                    tickvals=tick_vals,
+                    ticktext=tick_texts,
+                    gridcolor='rgba(0,0,0,0.1)' # 배경 그리드 라인을 연하게
                 )
             ),
             showlegend=False,
