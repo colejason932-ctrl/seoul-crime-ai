@@ -292,11 +292,13 @@ elif st.session_state.selected_menu == "report":
             line_color='#d63031'
         ))
         
+        # 현재 자치구의 최댓값을 계산하여 그래프 크기를 꽉 차게 자동 조절
+        max_val = max(vals)
         fig_radar.update_layout(
             polar=dict(
                 radialaxis=dict(
                     visible=True, 
-                    range=[0, 100],
+                    range=[0, max_val * 1.2 if max_val > 0 else 10],
                     tickfont=dict(color='yellow')
                 )
             ),
