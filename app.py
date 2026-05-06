@@ -165,7 +165,7 @@ if st.session_state.selected_menu == "deepdive":
             orientation='h', 
             title=f"[{selected_gu}] 타 자치구 대비 위험 요인 수준 (%)"
         )
-        fig_local_imp.update_traces(marker_color='#e84393') 
+        fig_local_imp.update_traces(marker_color='#e84393')
         fig_local_imp.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="최대치 대비 비율(%)", yaxis_title="")
         st.plotly_chart(fig_local_imp, use_container_width=True)
 
