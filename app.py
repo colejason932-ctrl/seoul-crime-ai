@@ -6,12 +6,11 @@ import plotly.graph_objects as go
 import xgboost as xgb
 from sklearn.preprocessing import MinMaxScaler
 import os
-pip install --upgrade google-generativeai
 
 # ------------------------------------------
-# [추가됨] 구글 Gemini API 라이브러리 추가
+# [수정됨] 새로운 구글 Gemini API 라이브러리 (google-genai)
 # ------------------------------------------
-import google.generativeai as genai
+from google import genai
 
 # ==========================================
 # 1. 페이지 설정 및 디자인
@@ -74,12 +73,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# [추가됨] 1.5. Gemini AI 챗봇 API 환경 설정
+# [수정됨] 1.5. 신규 Gemini AI 클라이언트 설정
 # ==========================================
 # 여기에 발급받으신 API 키를 그대로 입력하시면 됩니다.
-genai.configure(api_key="AIzaSyDkjj1GMOLDokt8hzPlRvz6pZmPjPWbngk") 
-# 빠른 응답 속도를 가진 gemini-1.5-flash 모델 적용
-gemini_model = genai.GenerativeModel('gemini-1.5-flash-001') 
+client = genai.Client(api_key="AIzaSy*****")
 
 # ==========================================
 # 2. 데이터 및 AI 모델 로드 (캐싱)
@@ -115,7 +112,6 @@ if df.empty:
 if "selected_menu" not in st.session_state:
     st.session_state.selected_menu = "home"
 
-# 챗봇 세션 상태 초기화
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
 
@@ -289,33 +285,33 @@ elif st.session_state.selected_menu == "future":
         st.info("👈 좌측 사이드바에서 정책 파라미터를 조절하고 '시뮬레이션 실행' 버튼을 눌러주세요.")
 
 # ==========================================
-# [추가됨] 8. 공통 챗봇 모듈 (모든 페이지 하단에 렌더링)
+# [수정됨] 8. 공통 챗봇 모듈 (최신 API 문법 적용)
 # ==========================================
 st.markdown("---")
 st.subheader("💬 AI 치안 정책 보좌관 (질의응답)")
 st.caption("현재 보고 계신 자치구의 데이터나 치안 관련 궁금한 점을 질문해보세요.")
 
-# 저장된 대화 기록 출력
 for message in st.session_state.chat_messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 사용자가 채팅창에 입력했을 때
 if prompt := st.chat_input(f"{selected_gu} 치안 데이터에 대해 무엇이든 물어보세요..."):
-    # 사용자 메시지 화면 출력 및 세션 저장
     st.session_state.chat_messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # 제미나이 AI 응답 처리
     with st.chat_message("assistant"):
         with st.spinner("AI가 분석 중입니다..."):
             try:
-                # 자치구 데이터 프롬프트 컨텍스트로 전달
                 context = f"현재 분석 중인 지역은 {selected_gu}입니다. 해당 지역의 야간 유동인구는 {gu_data['야간_유동인구']}명, CCTV는 {gu_data['CCTV_대수']}대입니다. 이 정보를 바탕으로 대답해 주세요. 질문: {prompt}"
-                response = gemini_model.generate_content(context)
+                
+                # 모델을 직접 호출하는 신규 문법으로 변경됨
+                response = client.models.generate_content(
+                    model="gemini-1.5-flash",
+                    contents=context
+                )
                 
                 st.markdown(response.text)
                 st.session_state.chat_messages.append({"role": "assistant", "content": response.text})
             except Exception as e:
-                st.error(f"AI 응답 중 오류가 발생했습니다. API 키가 정확한지 확인해 주세요. (에러: {e})")
+                st.error(f"AI 응답 중 오류가 발생했습니다: {e}")
