@@ -78,7 +78,7 @@ st.markdown("""
 # 여기에 발급받으신 API 키를 그대로 입력하시면 됩니다.
 genai.configure(api_key="AIzaSyDkjj1GMOLDokt8hzPlRvz6pZmPjPWbngk") 
 # 빠른 응답 속도를 가진 gemini-1.5-flash 모델 적용
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+gemini_model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 # ==========================================
 # 2. 데이터 및 AI 모델 로드 (캐싱)
