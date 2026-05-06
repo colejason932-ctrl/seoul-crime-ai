@@ -76,7 +76,7 @@ st.markdown("""
 # [수정됨] 1.5. 신규 Gemini AI 클라이언트 설정
 # ==========================================
 # 여기에 발급받으신 API 키를 그대로 입력하시면 됩니다.
-client = genai.Client(api_key="AIzaSy*****")
+client = genai.Client(api_key="AIzaSyDkjj1GMOLDokt8hzPlRvz6pZmPjPWbngk")
 
 # ==========================================
 # 2. 데이터 및 AI 모델 로드 (캐싱)
